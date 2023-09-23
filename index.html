@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Valoracion</title>
+  </head>
+  <body>
+    <!-- Teniendo en cuenta todo esto, podemos resolver un sistema de valoración con 5 estrellas, con las siguientes pautas: 
+      Se mostrará el valor actual al inicio.
+      Para valorar, al pasar con el mouse se iluminarán.
+      Indicar que se ha valorado y cambiar el valor si corresponde. -->
+    <div id="contenedor-estrellas"></div>
+
+    <script src="Recursos/Recursos/jquery-3.2.1.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        const estrellaVacia = "Recursos/Recursos/ev_b.png",
+          estrellaCompleta = "Recursos/Recursos/ec_b.png",
+          estrellaBrillante = "Recursos/Recursos/ep_b.png",
+          estrellaMedia = "Recursos/Recursos/em_b.png";
+        const contenedor = $("#contenedor-estrellas");
+        const cantidadEstrellas = 5;
+        var seleccionada = false;
+        var contador = 0;
+        var ranking = 0;
+        var promedio = 0;
+        var parrafoResultado = $("<p>");
+
+        //se crean las estrellas con su id y su clase
+        for (let i = 0; i < cantidadEstrellas; i++) {
+          let img = $("<img>");
+          img.attr("src", estrellaVacia);
+          img.attr("class", "estrella");
+          img.attr("id", +(i + 1));
+          contenedor.append(img);
+        }
+        contenedor.append(parrafoResultado);
+
+        //funcion que llene las estrellas
+        $(".estrella").on("mouseover", fnEstrellaBrillante);
+        $(".estrella").on("mouseout", fnEstrellaVacia);
+        $(".estrella").on("click", fnEstrellaSeleccionada);
+        /* $(".estrella").on("mouseout", fnPromedio); */
+        function fnEstrellaBrillante() {
+          let estrellaActual = parseInt(this.id);
+          for (let i = 0; i < estrellaActual; i++) {
+            $("#" + (i + 1)).attr("src", estrellaBrillante);
+          }
+        }
+
+        function fnEstrellaVacia() {
+          let estrellaActual = parseInt(this.id);
+          //console.log(seleccionada);
+          if (!seleccionada) {
+            for (let i = estrellaActual; i > 0; i--) {
+              $("#" + i).attr("src", estrellaVacia);
+            }
+          } else {
+            seleccionada = false;
+          }
+        }
+
+        function fnEstrellaSeleccionada() {
+          let estrellaActual = parseInt(this.id);
+          for (let i = 0; i < estrellaActual; i++) {
+            $("#" + (i + 1)).attr("src", estrellaCompleta);
+          }
+          seleccionada = true;
+          ranking += estrellaActual;
+          contador += 1;
+          promedio = ranking / contador;
+          console.log("ranking: " + ranking);
+          console.log("contador: " + contador);
+          console.log("promedio: " + promedio);
+
+          actualizarResultado();
+        }
+
+        function actualizarResultado() {
+          for (let i = 0; i < cantidadEstrellas; i++) {
+            $("#" + (i + 1)).attr("src", estrellaVacia);
+          }
+          //deja pintadas las estrellas
+          let estrellasEnteras = Math.floor(promedio);
+          for (let i = 0; i < estrellasEnteras; i++) {
+            $("#" + (i + 1)).attr("src", estrellaCompleta);
+          }
+          const parteDecimal = promedio - estrellasEnteras;
+          if (parteDecimal > 0) {
+            $("#" + (estrellasEnteras + 1)).attr("src", estrellaMedia);
+          }
+          parrafoResultado.text(
+            "Promedio: " + promedio.toFixed(1) + " estrellas"
+          );
+        }
+      });
+    </script>
+  </body>
+</html>
