@@ -22,8 +22,8 @@
           estrellaBrillante = "Recursos/Recursos/ep_b.png",
           estrellaMedia = "Recursos/Recursos/em_b.png";
         const contenedor = $("#contenedor-estrellas");
-        const cantidadEstrellas = 5;
-        var seleccionada = false;
+        const cantidadEstrellas = 5; //se podrá escoger la cantidad de estrellas deseadas
+        
         var contador = 0;
         var ranking = 0;
         var promedio = 0;
@@ -42,11 +42,11 @@
         //se agrega el promedio en texto
         contenedor.append(parrafoResultado);
 
-        //funcion que llene las estrellas
+        
         $(".estrella").on("mouseover", fnEstrellaBrillante);
         $(".estrella").on("mouseout", fnEstrellaVacia);
         $(".estrella").on("click", fnEstrellaSeleccionada);
-        /* $(".estrella").on("mouseout", fnPromedio); */
+        
 
         function fnEstrellaBrillante() {
           let estrellaActual = parseInt(this.id);
@@ -57,16 +57,13 @@
 
         function fnEstrellaVacia() {
           let estrellaActual = parseInt(this.id);
+          //si la variable promedio es mayor que 1, es decir ya fue actualizada llamará a la fn.
           if (promedio >= 1) {
             actualizarResultado();
           } else {
-            if (!seleccionada) {
-              for (let i = estrellaActual; i > 0; i--) {
+            for (let i = estrellaActual; i > 0; i--) {
                 $("#" + i).attr("src", estrellaVacia);
               }
-            } else {
-              seleccionada = false;
-            }
           }
         }
 
@@ -75,7 +72,7 @@
           for (let i = 0; i < estrellaActual; i++) {
             $("#" + (i + 1)).attr("src", estrellaCompleta);
           }
-          seleccionada = true;
+          
           ranking += estrellaActual;
           contador += 1;
           promedio = ranking / contador;
@@ -90,16 +87,22 @@
           for (let i = 0; i < cantidadEstrellas; i++) {
             $("#" + (i + 1)).attr("src", estrellaVacia);
           }
-          //deja pintadas las estrellas
+
+          //redondea numero entera menor
           let estrellasEnteras = Math.floor(promedio);
+          //deja pintadas las estrellas
           for (let i = 0; i < estrellasEnteras; i++) {
             $("#" + (i + 1)).attr("src", estrellaCompleta);
           }
+          //si el promedio tiene parte decimal se calcula restando la parte entera menos el promedio
           const parteDecimal = promedio - estrellasEnteras;
+          //al ID siguiente de la ultima estrella entera se le agrega la img de media estrella
           if (parteDecimal > 0) {
             $("#" + (estrellasEnteras + 1)).attr("src", estrellaMedia);
           }
+          
           parrafoResultado.text(
+            //to.fixed toma el primer digito luego de la coma
             "Promedio: " + promedio.toFixed(1) + " estrellas"
           );
         }
