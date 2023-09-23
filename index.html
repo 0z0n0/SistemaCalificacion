@@ -30,6 +30,7 @@
         var parrafoResultado = $("<p>");
 
         //se crean las estrellas con su id y su clase
+
         for (let i = 0; i < cantidadEstrellas; i++) {
           let img = $("<img>");
           img.attr("src", estrellaVacia);
@@ -37,6 +38,8 @@
           img.attr("id", +(i + 1));
           contenedor.append(img);
         }
+
+        //se agrega el promedio en texto
         contenedor.append(parrafoResultado);
 
         //funcion que llene las estrellas
@@ -44,6 +47,7 @@
         $(".estrella").on("mouseout", fnEstrellaVacia);
         $(".estrella").on("click", fnEstrellaSeleccionada);
         /* $(".estrella").on("mouseout", fnPromedio); */
+
         function fnEstrellaBrillante() {
           let estrellaActual = parseInt(this.id);
           for (let i = 0; i < estrellaActual; i++) {
@@ -53,13 +57,16 @@
 
         function fnEstrellaVacia() {
           let estrellaActual = parseInt(this.id);
-          //console.log(seleccionada);
-          if (!seleccionada) {
-            for (let i = estrellaActual; i > 0; i--) {
-              $("#" + i).attr("src", estrellaVacia);
-            }
+          if (promedio >= 1) {
+            actualizarResultado();
           } else {
-            seleccionada = false;
+            if (!seleccionada) {
+              for (let i = estrellaActual; i > 0; i--) {
+                $("#" + i).attr("src", estrellaVacia);
+              }
+            } else {
+              seleccionada = false;
+            }
           }
         }
 
